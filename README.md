@@ -1,5 +1,5 @@
 🚨incident-response-labs
-Incident Response labs — forensic investigation, attack simulation &amp; IR reporting | SCI
+Incident Response labs — forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
 
 All labs conducted in isolated VirtualBox environments or on authorised external targets.
 No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
@@ -9,54 +9,63 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 ## 📁 Labs
 
 ### Incident Response Lab — SMB Brute Force Attack & Windows Forensics
-Performed a full penetration test lifecycle: reconnaissance, scanning, vulnerability identification, exploitation, and post-exploitation. Documented findings in a structured report format.
-<br>**Tools:** nmap · Metasploit · Hydra
-<br>Target: Metasploitable 2 (192.168.56.XXX)
+Simulated an SMB brute-force attack from Kali Linux against a Windows 10 target, then switch to analyst mode and investigate the attack using Windows forensic artifacts — proving execution,
+identifying the attack timeline, and documenting findings in IR report format.
+<br>**Tools:** CrackMapExec · Hydra · PECmd · AmcacheParser · AppCompatCacheParser · EvtxECmd · EZ Tools Suite
+<br>Target: Target: WIN10TEST — SMB port 445
+
+This lab demonstrates the complete SOC analyst workflow:
+Attack simulation (Kali) → Artifact collection (WIN10TEST) → Forensic parsing (EZ Tools) → IR report
+
 
 Attack Chain
-<br>T1595.002  Active Scanning     → CrackMapExec initial SMB probe (anonymous enum)
-<br>T1078.003  Valid Accounts      → Targeting known local account bornia02
-<br>T1110.001  Brute Force         → Rapid wordlist-based password guessing
-<br>[DEFENSE]  Account Lockout     → Windows policy blocked further attempts (Event 4740)
+| Technique | ID | Tool | Description |
+|---|---|---|---|
+| Active Scanning | T1595.002 | CrackMapExec | Initial SMB probe — anonymous enum |
+| Valid Accounts | T1078.003 | CrackMapExec | Targeting known local account $ATTACKERHOSTNAME |
+| Brute Force | T1110.001 | CrackMapExec · Hydra | Rapid wordlist-based password guessing |
+| [DEFENSE] | — | Windows Policy | Account lockout — attack blocked (Event 4740) |
 
 Switched to analyst mode on WIN10TEST. Used Eric Zimmerman's EZ Tools suite to parse four Windows forensic artifacts — then correlated them to reconstruct the attack timeline.
 
 Artifact Overview
-ArtifactToolLives atKey fieldProvesPrefetchPECmdC:\Windows\Prefetch\*.pfRun count + last 8 timestampsProgram ran (with timing)AmCacheAmcacheParserC:\Windows\AppCompat\Programs\Amcache.hveSHA1 hash + first executionProgram ran with hash for VTShimcacheAppCompatCacheParserSYSTEM registry hiveFile path + LastModified timeWindows saw the file (presence)Event LogsEvt
+| Artifact | Tool | Location | Key Field | Proves |
+|---|---|---|---|---|
+| Prefetch | PECmd | `C:\Windows\Prefetch\*.pf` | Run count + last 8 timestamps | Program ran |
+| AmCache | AmcacheParser | `C:\Windows\AppCompat\Programs\Amcache.hve` | SHA1 hash | Ran + hash for VT |
+| Shimcache | AppCompatCacheParser | SYSTEM registry hive | File path + LastModified | Windows saw file |
+| Event Logs | EvtxECmd | `C:\Windows\System32\winevt\Logs\` | Event ID + timestamp | Auth + persistence |
 
 - ✅ Key Finding — Brute Force Attack Reconstructed from Logs
 Discovery: Querying Event 4625 (Failed Logon)
 
-Seeing "password is wrong" on bornia02 = the attacker enumerated valid usernames first,
-then targeted this specific account for brute force.
-Event 4625 Security Log Metrics (full 28-day log)
-Event IDCountAssessment46241,024Successful logons — normal462514,657Failed logons — investigate464870Logon with explicit creds4672922Admin logons (PowerShell as admin)46981Scheduled task created — investigate47401Account lockout — the brute force event49077,741Audit policy changes — normal Windows
+> Seeing `"password is wrong"` on $ATTACKERHOSTNAME = the attacker enumerated valid usernames first,
+> then targeted this specific account for brute force.
+
+| Event ID | Count | Assessment |
+|---|---|---|
+| 4624 | 1,024 | Successful logons — normal |
+| 4625 | 14,657 | ⚠️ Failed logons — investigate |
+| 4648 | 70 | Logon with explicit credentials |
+| 4672 | 922 | Admin logons (PowerShell as admin) |
+| 4698 | 1 | ⚠️ Scheduled task created — investigate |
+| 4740 | 1 | 🚨 Account lockout — the brute force event |
+| 4907 | 7,741 | Audit policy changes — normal Windows |
 
 🧰 Tools Used
-CategoryToolPurposeAttack SimulationCrackMapExec · HydraSMB brute force from Kali LinuxPrefetch ForensicsPECmd (EZ Tools)Parse .pf files → execution timelineAmCache ForensicsAmcacheParser (EZ Tools)Parse registry hive → SHA1 hashesShimcache ForensicsAppCompatCacheParser (EZ Tools)Parse SYSTEM hive → file presenceEvent Log ForensicsEvtxECmd (EZ Tools)Parse Security.evtx → attack timelineThreat IntelVirusTotal · ThreatFoxSHA1 hash lookups from AmCachePlatformKali Linux · Windows 10 · VirtualBoxIsolated lab environment
+| Category | Tool | Purpose |
+|---|---|---|
+| Attack Simulation | CrackMapExec · Hydra | SMB brute force from Kali Linux |
+| Prefetch Forensics | PECmd (EZ Tools) | Parse `.pf` files → execution timeline |
+| AmCache Forensics | AmcacheParser (EZ Tools) | Parse registry hive → SHA1 hashes |
+| Shimcache Forensics | AppCompatCacheParser (EZ Tools) | Parse SYSTEM hive → file presence |
+| Event Log Forensics | EvtxECmd (EZ Tools) | Parse Security.evtx → attack timeline |
+| Threat Intel | VirusTotal · ThreatFox | SHA1 hash lookups from AmCache |
+| Platform | Kali Linux · Windows 10 · VirtualBox | Isolated lab environment |
 
-🔗 How the Artifacts Work Together
-Analyst's question: "Did malware X run on this host?"
-
-Step 1: Prefetch    → Did it execute? When? How many times?
-                                    ↓
-Step 2: AmCache     → What's the SHA1 hash? (even if binary deleted)
-                                    ↓
-Step 3: vt_lookup   → Is that hash known malware? (VirusTotal/ThreatFox)
-                                    ↓
-Step 4: Shimcache   → Did Windows see the file? (backup if Prefetch deleted)
-                                    ↓
-Step 5: EvtxECmd    → What authentication/persistence events surround it?
-                                    ↓
-Step 6: Timeline Explorer → All CSVs overlaid → single unified attack timeline
-The attacker's dilemma: To hide from all three artifacts simultaneously:
-
-Delete Prefetch .pf files ← easy (2 seconds)
-Edit live locked AmCache hive ← hard (admin + registry expertise)
-Flush 1024+ binaries through Shimcache ← extreme (leaves its own evidence)
-Clear Security.evtx ← leaves Event 1102 (log cleared) in System log
-
-No attacker cleans all four without leaving traces.
+<br><img width="659" height="357" alt="image" src="https://github.com/user-attachments/assets/62a8110c-ac69-43bd-8239-25ee180a1d53" />
+📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/smb-pentest-forensics-report_protected.pdf)**  
+> 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
 
 ⚖️ Legal & Ethical Notice
 All activities performed in an isolated VirtualBox lab environment against VMs owned by the student.
