@@ -1,5 +1,5 @@
-🚨incident-response-labs
-Incident Response labs — forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
+🚨Incident-response-labs
+<br>forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
 
 All labs conducted in isolated VirtualBox environments or on authorised external targets.
 No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
