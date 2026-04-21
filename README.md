@@ -36,7 +36,7 @@ Artifact Overview
 | Shimcache | AppCompatCacheParser | SYSTEM registry hive | File path + LastModified | Windows saw file |
 | Event Logs | EvtxECmd | `C:\Windows\System32\winevt\Logs\` | Event ID + timestamp | Auth + persistence |
 
-- ✅ Key Finding — Brute Force Attack Reconstructed from Logs
+<br>✅ Key Finding — Brute Force Attack Reconstructed from Logs
 Discovery: Querying Event 4625 (Failed Logon)
 
 > Seeing `"password is wrong"` on $ATTACKERHOSTNAME = the attacker enumerated valid usernames first,
