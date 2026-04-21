@@ -1,5 +1,5 @@
 🚨Incident-response-labs
-<br>forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
+<br>Forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
 
 All labs conducted in isolated VirtualBox environments or on authorised external targets.
 No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
@@ -15,7 +15,7 @@ identifying the attack timeline, and documenting findings in IR report format.
 <br>Target: Target: WIN10TEST $HOSTNAME — SMB port 445
 
 This lab demonstrates the complete SOC analyst workflow:
-Attack simulation (Kali) → Artifact collection (WIN10TEST) → Forensic parsing (EZ Tools) → IR report
+<br>Attack simulation (Kali) → Artifact collection (WIN10TEST) → Forensic parsing (EZ Tools) → IR report
 
 
 Attack Chain
