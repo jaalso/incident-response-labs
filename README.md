@@ -12,7 +12,7 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 Simulated an SMB brute-force attack from Kali Linux against a Windows 10 target, then switch to analyst mode and investigate the attack using Windows forensic artifacts — proving execution,
 identifying the attack timeline, and documenting findings in IR report format.
 <br>**Tools:** CrackMapExec · Hydra · PECmd · AmcacheParser · AppCompatCacheParser · EvtxECmd · EZ Tools Suite
-<br>Target: Target: WIN10TEST — SMB port 445
+<br>Target: Target: WIN10TEST $HOSTNAME — SMB port 445
 
 This lab demonstrates the complete SOC analyst workflow:
 Attack simulation (Kali) → Artifact collection (WIN10TEST) → Forensic parsing (EZ Tools) → IR report
