@@ -4,6 +4,11 @@
 <br>All labs conducted in isolated VirtualBox environments or on authorised external targets.  — 
 No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
 
+| # | Lab | Tools | Status |
+|---|---|---|---|
+| 01 | SMB Brute Force Attack & Windows Forensics | CrackMapExec · EZ Tools · EvtxECmd | ✅ Complete |
+| 02 | Wayne Corp IR Simulation *(Week 4)* | KAPE · Timeline Explorer · EvtxECmd | 🔜 Coming soon |
+
 ---
 
 ## 📁 Labs
@@ -62,6 +67,27 @@ Discovery: Querying Event 4625 (Failed Logon)
 | Event Log Forensics | EvtxECmd (EZ Tools) | Parse Security.evtx → attack timeline |
 | Threat Intel | VirusTotal · ThreatFox | SHA1 hash lookups from AmCache |
 | Platform | Kali Linux · Windows 10 · VirtualBox | Isolated lab environment |
+
+
+
+
+**credential Brute Force**
+<br><img width="925" height="460" alt="image" src="https://github.com/user-attachments/assets/b19625e5-7f3a-4c9d-b91e-e659b8690645" />
+
+**accessing Admin account**
+<br><img width="868" height="147" alt="image" src="https://github.com/user-attachments/assets/f00976b0-b150-4fb8-bb21-6753e09f6876" />
+
+**Using Time Explorer to prefecth**
+<img width="1055" height="424" alt="image" src="https://github.com/user-attachments/assets/95890e40-5974-4d88-a20c-a639b3471ef1" />
+
+**reading the EvtxECmd output**
+<br><img width="1068" height="163" alt="image" src="https://github.com/user-attachments/assets/820328be-2e27-4ab1-bccc-ee25ccca6778" />
+**event 4740 burst**
+<br><img width="1039" height="242" alt="image" src="https://github.com/user-attachments/assets/c4592c60-44c1-48ac-b413-07ea8cf53cb1" />
+
+
+
+
 
 <br><img width="659" height="357" alt="image" src="https://github.com/user-attachments/assets/62a8110c-ac69-43bd-8239-25ee180a1d53" />
 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/smb-pentest-forensics-report_protected.pdf)**  
