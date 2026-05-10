@@ -1,5 +1,4 @@
 > 🚨Incident-response-labs
-> 
 <br>Forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics | SCI
 <br>All labs conducted in isolated VirtualBox environments or on authorised external targets.  — 
 No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
@@ -148,7 +147,7 @@ KAPE Collection Results:
 | SOC Tools Cheat Sheet | 22 tools · MITRE ATT&CK quick-reference · Windows Event ID reference |
 | Interactive Drill Widgets (×9) | EvtxECmd · Splunk/SPL · MITRE mapping · Mock Alert Triage · Timeline Explorer · VT+CyberChef · KAPE · Registry Explorer · LOLBAS/PsExec |
 
-📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/smb-pentest-forensics-report_protected.pdf)**  
+📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/portfolio-lab-engagement-report_protected.pdf)**  
 > 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
 
 ⚖️ Legal & Ethical Notice
