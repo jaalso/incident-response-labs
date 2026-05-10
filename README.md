@@ -7,13 +7,13 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 | # | Lab | Tools | Status |
 |---|---|---|---|
 | 01 | SMB Brute Force Attack & Windows Forensics | CrackMapExec · EZ Tools · EvtxECmd | ✅ Complete |
-| 02 | Wayne Corp IR Simulation *(Week 4)* | KAPE · Timeline Explorer · EvtxECmd | 🔜 Coming soon |
+| 02 | Wayne Corp IR Simulation — Windows DFIR & SOC | KAPE · EZ Tools · impacket · Timeline Explorer | ✅ Complete |
 
 ---
 
 ## 📁 Labs
 
-### Incident Response Lab — SMB Brute Force Attack & Windows Forensics
+### 01 SMB Brute Force Attack & Windows Forensics
 Simulated an SMB brute-force attack from Kali Linux against a Windows 10 target, then switch to analyst mode and investigate the attack using Windows forensic artifacts — proving execution,
 identifying the attack timeline, and documenting findings in IR report format.
 <br>**Tools:** CrackMapExec · Hydra · PECmd · AmcacheParser · AppCompatCacheParser · EvtxECmd · EZ Tools Suite
@@ -68,9 +68,6 @@ Discovery: Querying Event 4625 (Failed Logon)
 | Threat Intel | VirusTotal · ThreatFox | SHA1 hash lookups from AmCache |
 | Platform | Kali Linux · Windows 10 · VirtualBox | Isolated lab environment |
 
-
-
-
 **credential Brute Force**
 <br><img width="925" height="460" alt="image" src="https://github.com/user-attachments/assets/b19625e5-7f3a-4c9d-b91e-e659b8690645" />
 
@@ -85,11 +82,72 @@ Discovery: Querying Event 4625 (Failed Logon)
 **event 4740 burst**
 <br><img width="1039" height="242" alt="image" src="https://github.com/user-attachments/assets/c4592c60-44c1-48ac-b413-07ea8cf53cb1" />
 
+---
+
+### 02 IR Simulation — Windows DFIR & SOC Analyst Engagement
+Lab type: Full red team → blue team → knowledge consolidation — three operational phases. End-to-end Windows DFIR and SOC analyst engagement spanning offensive operations, defender-side forensic reconstruction, and production of analyst reference materials. Every finding maps to specific MITRE ATT&CK techniques and Windows Event IDs using real engagement data — no synthetic or copied material.
+<br>**Tools:** KAPE · EZ Tools Suite · Timeline Explorer · Registry Explorer · impacket-psexec · CrackMapExec · Wazuh
+<br>Environment:Kali Linux ($IPATTACKER) → Windows 10 Enterprise WIN10TEST ($IPVICTIM)
+
+Key milestones:
+- ✅ Discovered attacker-driven Domain Policy modification (Event 4739) that disabled account lockout mid-attack
+- ✅ Collected and parsed 3,303 forensic artifacts (1.6 GB) in 13 minutes using KAPE
+- ✅ Reconstructed impacket-psexec lateral movement across five independent forensic sources
+- ✅ Identified impacket fingerprint — blank WorkstationName field in Event 4624 distinguishes it from legitimate PsExec
 
 
+🔴 Phase 1 — Offensive Operations
+| Technique | ID | Tool | Evidence |
+|---|---|---|---|
+| Network Service Discovery | T1046 | nmap · netdiscover | Port 445 open on WIN10TEST |
+| Brute Force: Password Guessing | T1110.001 | CrackMapExec · Hydra | 4 bursts · 14,657 Event 4625 entries |
+| Impair Defenses: Disable Tools | T1562.001 | net accounts | Event 4739 — LockoutThreshold=0 |
+| Valid Accounts: Local Accounts | T1078.003 | Stolen credentials | Event 4624 Type 3 · blank WorkstationName |
+| System Services: Service Execution | T1569.002 | impacket-psexec | qSqxGVfD.exe · oTGtPTeq.exe |
+| Create or Modify Service | T1543.003 | impacket-psexec | Event 7045 — services ysZf · VSGy |
+| Remote Services: SMB Admin Shares | T1021.002 | impacket-psexec | Lateral movement via ADMIN$ |
+| Indicator Removal: Clear Event Logs | T1070.001 | wevtutil | Event 1102 — Security log cleared |
+
+🔵 Phase 2 — Defender Investigation
+| Tool | Source | Records | Forensic Value |
+|---|---|---|---|
+| PECmd | `C:\Windows\Prefetch\*.pf` | 141 files | Execution evidence + 8 historical timestamps |
+| AmcacheParser | Amcache.hve | 401 entries | SHA1 hashes of every executable seen |
+| AppCompatCacheParser | SYSTEM hive | 167 entries | LRU-ordered binary list |
+| EvtxECmd | `winevt\Logs\*.evtx` | 30,924 events | Unified parsed event log set |
+| RECmd | Multiple hives | DFIRBatch | Persistence key checklist |
+| MFTECmd | $MFT | 200K+ entries | File system metadata |
 
 
-<br><img width="659" height="357" alt="image" src="https://github.com/user-attachments/assets/62a8110c-ac69-43bd-8239-25ee180a1d53" />
+🚨 Key Finding — Event 4739 (Defense Evasion Discovered)
+Filtering Timeline Explorer on EventId 4625 revealed 14,657 failed logons.
+The question: why did Burst 4 (41 failures) produce no Event 4740 lockout?
+Time-range filter between Burst 3 end (13:35:53) and Burst 4 start (13:56:18)
+surfaced a single anomalous event — the centrepiece finding of the engagement:
+```bash
+# Event 4739 — Domain Policy was changed
+# TimeCreated:      2026-03-25 13:54:22
+# SubjectUserName:  bornia02
+# LockoutThreshold: 0    ← DISABLED by attacker
+```
+
+KAPE Collection Results:
+| KAPE Metric | Result |
+|---|---|
+| Files collected | 3,303 (1.6 GB) |
+| Files deduplicated | 362 |
+| Parsing processors run | 18 |
+| Output CSVs produced | 30 (305 MB) |
+| Total runtime | **13 minutes** |
+
+📚Phase 3 — Knowledge Consolidation:
+| Deliverable | Content |
+|---|---|
+| SMB Pentest + Forensics Report | 24 pages · 4-burst brute force · Event 4739 finding · EZ Tools walkthrough |
+| PsExec Lateral Movement Report | 17 pages · 5-source evidence chain · impacket fingerprint |
+| SOC Tools Cheat Sheet | 22 tools · MITRE ATT&CK quick-reference · Windows Event ID reference |
+| Interactive Drill Widgets (×9) | EvtxECmd · Splunk/SPL · MITRE mapping · Mock Alert Triage · Timeline Explorer · VT+CyberChef · KAPE · Registry Explorer · LOLBAS/PsExec |
+
 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/smb-pentest-forensics-report_protected.pdf)**  
 > 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
 
