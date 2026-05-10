@@ -1,8 +1,13 @@
 > 🚨Incident-response-labs
 
-Forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics
 All labs conducted in isolated VirtualBox environments or on authorised external targets. 
-No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
+<br>No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
+
+---
+
+## 📁 Labs
+
+Forensic investigation · attack simulation · IR reporting · DFIR · Windows forensics
 
 | # | Lab | Tools | Status |
 |---|---|---|---|
@@ -10,8 +15,6 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 | 02 | Wayne Corp IR Simulation — Windows DFIR & SOC | KAPE · EZ Tools · impacket · Timeline Explorer | ✅ Complete |
 
 ---
-
-## 📁 Labs
 
 ### 01 SMB Brute Force Attack & Windows Forensics
 Simulated an SMB brute-force attack from Kali Linux against a Windows 10 target, then switch to analyst mode and investigate the attack using Windows forensic artifacts — proving execution,
@@ -151,7 +154,24 @@ KAPE Collection Results:
 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/portfolio-lab-engagement-report_protected.pdf)**  
 > 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
 
-⚖️ Legal & Ethical Notice
+
+---
+
+## 🧰 Tools Used
+| Category | Tools |
+|---|---|
+| Attack Simulation | CrackMapExec · Hydra · impacket-psexec |
+| Collection | KAPE 1.3.0.2 (KapeTriage + !EZParser) |
+| Forensic Parsing | PECmd · AmcacheParser · AppCompatCacheParser · EvtxECmd · MFTECmd · RECmd |
+| Forensic GUI | Timeline Explorer · Registry Explorer |
+| SIEM | Wazuh v4.14.3 · Splunk Enterprise (BOTS v1) |
+| Threat Intel | VirusTotal · URLscan.io · Any.RUN · CyberChef |
+| Platform | Kali Linux · Windows 10 Enterprise · VirtualBox |
+
+---
+
+## ⚖️ Legal & Ethical Notice
+
 All activities performed in an isolated VirtualBox lab environment against VMs owned by the student.
 CrackMapExec and Hydra were used against WIN10TEST — a personal test machine with no external
 connectivity. This report is submitted as part of the Swiss Cyber Institute IR Playbooks curriculum.
